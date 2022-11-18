@@ -6,7 +6,7 @@ from umqtt.robust import MQTTClient
 import sys
 
 
-WIFI_SSID     = 'raspi-webgui-01'
+WIFI_SSID     = 'raspi-webgui-04'
 WIFI_PASSWORD = 'raspberrypi'
 
 MQTT_IO_URL = '10.3.141.1'
@@ -59,30 +59,26 @@ except Exception as e:
     print('Nao foi possivel conectar ao servidor MQTT {}{}'.format(type(e).__name__, e))
     sys.exit()
 
-
+def mapear(x, in_min, in_max,out_min, out_max):
+    return (x - in_min) *(out_max - out_min) / (in_max - in_min) + out_min
 
 def cb(topic, msg):
     print('Received Data:  Topic = {}, Msg = {}'.format(topic, msg))
-    # Para recepcao de dados do tipo numerico, eh necessario
-    # converter o texto em numero
-    # Recebendo os dados:
-        #recieved_data = str(msg,'utf-8')
-        #if recieved_data == "0":
-        #    led.value(0)
-        #if recieved_data == "1":
-        #    led.value(1)
-    # Caso a mensagem seja um texto, nenhuma conversao eh necessaria
-    # Para o topico da lampada da cozinha
+    #recieved_data = int(str(msg,'utf-8'))
+    #valor_mapeado = mapear(recieved_data,0,100,0,10)
+    #if valor_mapeado == 0:
+    #    led.value(0)
+    #if valor_mapeado == 1:
+    #    led.value(1)
+    
     if topic == b'aviao/motor/1':
-        if msg == b'ligar':
-            print('Alterando o estado da lampada da cozinha')
-            # Alterna o estado da lampada da cozinha
+        if msg == b'ligar/desligar':
+            print('Ligando desligando motor 1')
             motor1.value(not motor1.value())
-    # Para o topico da lampada da suite
+    
     if topic == b'aviao/motor/2':
-        if msg == b'troca':
-            print('Alterando o estado da lampada da suite')
-            # Alterna o estado da lampada da suite
+        if msg == b'ligar/desligar':
+            print('Ligando desligando motor 2')
             motor2.value(not motor2.value())
 
 
